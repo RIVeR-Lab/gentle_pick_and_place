@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<launch>
+    <!-- Load standard constellation of processing nodelets -->
+    <include file="$(find azure_kinect_ros_driver)/launch/kinect_rgbd.launch">
+      <arg name="fps"                         value="15" />
+      <arg name="rgb_point_cloud"             value="true" />
+      <arg name="point_cloud"                 value="true" />
+      <arg name="overwrite_robot_description" value="false" />
+    </include>
+    <node pkg="tf" type="static_transform_publisher" name="kinect_link_broadcaster" args="0.12 0.05 0.995 0 1.58 0 base_link camera_base 100" />
+</launch>
