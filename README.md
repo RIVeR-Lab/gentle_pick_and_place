@@ -1,7 +1,7 @@
 # Gentle_Pick_and_Place
 Pick and place demo for gentle gripper.
 
-## Running steps
+## Running instructions
 Open four terminals and run the source command in each terminal:
 ```
 source ~/ur_ws/devel/setup.bash
