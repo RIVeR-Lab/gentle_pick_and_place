@@ -11,7 +11,7 @@ Then run the following commands in each terminal by the same order:
 ```
 roslaunch pick_and_place ur3e.launch
 ```
-After this command, you need to start the `gentle_pick` program on the robot pendant.
+After this command, you need to start the `gentle_pick` program on the robot teaching pendant.
 
 2. Start the camera node
 ```
