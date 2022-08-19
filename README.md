@@ -1,6 +1,13 @@
 # Gentle_Pick_and_Place
 Pick and place demo for gentle gripper.
 
+## Prequisites
+Install pointcloud_proc library
+```
+git clone git@github.com:tkelestemur/point_cloud_proc.git
+```
+
+
 ## Running instructions
 Open four terminals and run the source command in each terminal:
 ```
