@@ -15,6 +15,7 @@ from ur_msgs.srv import *
 from scipy.spatial.transform import Rotation
 import scipy.linalg as linalg
 import copy
+import tf2_ros
 
 class BottlePickPlace(object):
     def __init__(self):
@@ -178,14 +179,57 @@ if __name__ == "__main__":
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
     pre_place_pose = [0.4, 0.0, 0.3]
-    bottle_place_pose = [0.15, 0.45, 0.3]
-    can_place_pose = [0.15, -0.45, 0.3]
+    default_bottle_place_pose = [0.15, 0.45, 0.3]
+    default_can_place_pose = [0.15, -0.45, 0.3]
+    bottle_place_pose = default_bottle_place_pose
+    can_place_pose = default_can_place_pose
     demo = BottlePickPlace()
 
     demo.open_gripper()
     for i in range(5):
         # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
         demo.send_arm_traj(home_joint_state)
+
+        # start a tfBuffer for getting information about the AprilTags relative locations via TF
+        tfBuffer = tf2_ros.Buffer()
+        listener = tf2_ros.TransformListener(tfBuffer)
+
+        try:
+            # get the relative loactions of the fake base_link, the tag for the bottle 'bin', and the tag for the can 'bin'
+            base_dup_to_bottle = tfBuffer.lookup_transform('base_link_dup', 'bottle_taG', rospy.Time(0), rospy.Duration(1.0))
+            base_dup_to_can = tfBuffer.lookup_transform('base_link_dup', 'can_taG', rospy.Time(0), rospy.Duration(1.0))
+
+            # define the shift between tag location and bin location
+            # each value is a distance in meters along the relevant positive axis
+            tag_to_bin_key = 
+            {
+                    'x': -0.2,
+                    'y': -0.1,
+                    'z': 0.3
+            }
+
+            # convert the TF messages to pose lists, adding the offset
+            ar_bottle_place_pose = [
+                    base_dup_to_bottle.transform.translation.x + tag_to_bin_key['x']
+                    base_dup_to_bottle.transform.translation.y + tag_to_bin_key['y']
+                    base_dup_to_bottle.transform.translation.z + tag_to_bin_key['z']
+                ]
+            ar_can_place_pose = [
+                    base_dup_to_can.transform.translation.x + tag_to_bin_key['x']
+                    base_dup_to_can.transform.translation.y + tag_to_bin_key['y']
+                    base_dup_to_can.transform.translation.z + tag_to_bin_key['z']
+                ]
+
+            # assign the calculated poses to the reals
+            bottle_place_pose = ar_bottle_place_pose
+            can_place_pose = ar_can_place_pose
+
+        except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
+            # enter the except case if something went wrong with the TF frames specifically
+            # (usually this means one or more frame wasn't visable)
+            # in this case assign the default poses to the reals
+            bottle_place_pose = default_bottle_place_pose
+            can_place_pose = default_can_place_pose
 
         objects = demo.cluster_objects()
         rand_object_idx = np.random.choice(len(objects))
