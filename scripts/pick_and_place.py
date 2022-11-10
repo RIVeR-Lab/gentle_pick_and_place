@@ -201,8 +201,7 @@ if __name__ == "__main__":
 
             # define the shift between tag location and bin location
             # each value is a distance in meters along the relevant positive axis
-            tag_to_bin_key = 
-            {
+            tag_to_bin_key = {
                     'x': -0.2,
                     'y': -0.1,
                     'z': 0.3
@@ -210,17 +209,18 @@ if __name__ == "__main__":
 
             # convert the TF messages to pose lists, adding the offset
             ar_bottle_place_pose = [
-                    base_dup_to_bottle.transform.translation.x + tag_to_bin_key['x']
-                    base_dup_to_bottle.transform.translation.y + tag_to_bin_key['y']
+                    base_dup_to_bottle.transform.translation.x + tag_to_bin_key['x'],
+                    base_dup_to_bottle.transform.translation.y + tag_to_bin_key['y'],
                     base_dup_to_bottle.transform.translation.z + tag_to_bin_key['z']
                 ]
             ar_can_place_pose = [
-                    base_dup_to_can.transform.translation.x + tag_to_bin_key['x']
-                    base_dup_to_can.transform.translation.y + tag_to_bin_key['y']
+                    base_dup_to_can.transform.translation.x + tag_to_bin_key['x'],
+                    base_dup_to_can.transform.translation.y + tag_to_bin_key['y'],
                     base_dup_to_can.transform.translation.z + tag_to_bin_key['z']
                 ]
 
             # assign the calculated poses to the reals
+            print("AprilTag place poses")
             bottle_place_pose = ar_bottle_place_pose
             can_place_pose = ar_can_place_pose
 
@@ -228,6 +228,7 @@ if __name__ == "__main__":
             # enter the except case if something went wrong with the TF frames specifically
             # (usually this means one or more frame wasn't visable)
             # in this case assign the default poses to the reals
+            print("Default place poses")
             bottle_place_pose = default_bottle_place_pose
             can_place_pose = default_can_place_pose
 
