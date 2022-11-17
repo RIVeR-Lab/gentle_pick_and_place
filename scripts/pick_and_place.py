@@ -116,6 +116,50 @@ class BottlePickPlace(object):
         self.arm_pos_cli.send_goal(traj_goal)
         self.arm_pos_cli.wait_for_result()
 
+    def send_arm_traj_mpnb(self, q_list):
+        # Multi-Point Non-Blended version of send_arm_traj
+        # send the arm to a series of positions described as items in the q_list
+        traj_goal = FollowJointTrajectoryGoal()
+        traj = JointTrajectory()
+        traj.joint_names = self.joint_names
+        points_list = []
+
+        for q_x in range(len(q_list)):
+            q = q_list[q_x]
+            traj_point = JointTrajectoryPoint()
+            traj_point.positions = q
+            traj_point.velocities = [0.0] * self.num_joints
+            traj_point.time_from_start = rospy.Time(2*(q_x+1))
+            points_list.append(traj_point)
+
+        traj.points = points_list
+        traj_goal.trajectory = traj
+
+        self.arm_pos_cli.send_goal(traj_goal)
+        self.arm_pos_cli.wait_for_result()
+
+    def send_arm_traj_mid(self, q_m, q_f):
+        # perform send_arm_traj but use a midpoint (q_m) and an end point (q_f)
+        traj_goal = FollowJointTrajectoryGoal()
+        traj = JointTrajectory()
+        traj.joint_names = self.joint_names
+
+        traj_point_m = JointTrajectoryPoint()
+        traj_point_m.positions = q_m
+        traj_point_m.velocities = [0.0] * self.num_joints
+        traj_point_m.time_from_start = rospy.Time(1.5)
+
+        traj_point_f = JointTrajectoryPoint()
+        traj_point_f.positions = q_f
+        traj_point_f.velocities = [0.0] * self.num_joints
+        traj_point_f.time_from_start = rospy.Time(5)
+
+        traj.points = [traj_point_m, traj_point_f]
+        traj_goal.trajectory = traj
+
+        self.arm_pos_cli.send_goal(traj_goal)
+        self.arm_pos_cli.wait_for_result()
+
     def cluster_objects(self):
         req = TabletopClusteringRequest()
         res = self.object_cluster_cli(req)
@@ -199,13 +243,17 @@ if __name__ == "__main__":
         demo.send_arm_traj(q_sol)
         demo.pick()
 
-        q_sol = demo.ik(pre_place_pose, grasp_rot)
-        demo.send_arm_traj(q_sol)
+        # q_sol = demo.ik(pre_place_pose, grasp_rot)
+        # demo.send_arm_traj(q_sol)
 
         if max_segment_norm < 0.15:
             place_pose = can_place_pose
         else:
             place_pose = bottle_place_pose
-        q_sol = demo.ik(place_pose, grasp_rot)
-        demo.send_arm_traj(q_sol)
+        # q_sol = demo.ik(place_pose, grasp_rot)
+        # demo.send_arm_traj(q_sol)
+
+        q_sols = [demo.ik(pre_place_pose, grasp_rot),
+                demo.ik(place_pose, grasp_rot)]
+        demo.send_arm_traj_mpnb(q_sols)
         demo.place()
