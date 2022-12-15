@@ -63,6 +63,14 @@ class BottlePickPlace(object):
         self.arm_joints.qdot[4] = msg.velocity[4]
         self.arm_joints.qdot[5] = msg.velocity[5]
 
+        # print statements for getting a static history of the robot's position over time
+        # print(msg)
+        # print("sequence:", msg.header.seq)
+        # print("position:", msg.position)
+        # print("velocity:", msg.velocity)
+        # print("effort:", msg.effort)
+        # print()
+
     def ik(self, pos, rot):
         eef_pose = kdl.Frame(
             kdl.Rotation.RPY(*rot),
@@ -245,7 +253,7 @@ class BottlePickPlace(object):
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-    # home_pos = [0.0, 0.4, 0.3]
+    home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
     pre_place_pose = [0.4, 0.0, 0.3]
     bottle_place_pose = [0.15, 0.45, 0.3]
@@ -254,7 +262,8 @@ if __name__ == "__main__":
 
     demo.open_gripper()
     for i in range(5):
-        # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
+        q_sol = demo.ik(home_pos, [np.pi, 0, 0])
+        print("q_sol at line 253 equals", q_sol)
         demo.send_arm_traj(home_joint_state)
 
         objects = demo.cluster_objects()
@@ -265,6 +274,7 @@ if __name__ == "__main__":
                 object.pmax.y - object.pmin.y]))
 
         grasp_pos, grasp_rot = demo.select_grasp_pose(object)
+        print("grasp pose =", grasp_pos, "\ngrasp rotation =", grasp_rot)
         # old call to send_arm_traj
         # q_sol = demo.ik(grasp_pos, grasp_rot)
         # demo.send_arm_traj(q_sol)
