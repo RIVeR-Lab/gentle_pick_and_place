@@ -129,7 +129,7 @@ class BottlePickPlace(object):
             traj_point = JointTrajectoryPoint()
             traj_point.positions = q
             traj_point.velocities = [0.0] * self.num_joints
-            traj_point.time_from_start = rospy.Time(2*(q_x+1))
+            traj_point.time_from_start = rospy.Time(3*(q_x+1)/len(q_list))
             points_list.append(traj_point)
 
         traj.points = points_list
@@ -239,8 +239,30 @@ if __name__ == "__main__":
                 object.pmax.y - object.pmin.y]))
 
         grasp_pos, grasp_rot = demo.select_grasp_pose(object)
-        q_sol = demo.ik(grasp_pos, grasp_rot)
-        demo.send_arm_traj(q_sol)
+        # old call to send_arm_traj
+        # q_sol = demo.ik(grasp_pos, grasp_rot)
+        # demo.send_arm_traj(q_sol)
+
+        # new call to send_arm_traj_mpnb, using a single XYZ midpoint
+        midpoint_xyz = [0,0,0]
+        for lcv in range(3):
+            midpoint_xyz[lcv] = (grasp_pos[lcv] + home_pos[lcv]) / 2
+        q_sols = [demo.ik(midpoint_xyz, grasp_rot),
+                demo.ik(grasp_pos, grasp_rot)]
+        demo.send_arm_traj_mpnb(q_sols)
+
+        # alternate call to send_arm_traj_mpnb, using 1/4, 1/2, and 3/4 joint midpoints
+        # q_stmp = demo.ik(grasp_pos, grasp_rot)
+        # midpoint_q = [0,0,0,0,0,0]
+        # fst_qrt_q = [0,0,0,0,0,0]
+        # trd_qrt_q = [0,0,0,0,0,0]
+        # for lcv in range(6):
+        #     midpoint_q[lcv] = (q_stmp[lcv] + home_joint_state[lcv]) / 2
+        #     fst_qrt_q[lcv] = (midpoint_q[lcv] + home_joint_state[lcv]) / 2
+        #     trd_qrt_q[lcv] = (q_stmp[lcv] + midpoint_q[lcv]) / 2
+        # q_sols = [fst_qrt_q, midpoint_q, trd_qrt_q, q_stmp]
+        # demo.send_arm_traj_mpnb(q_sols)
+
         demo.pick()
 
         # q_sol = demo.ik(pre_place_pose, grasp_rot)
