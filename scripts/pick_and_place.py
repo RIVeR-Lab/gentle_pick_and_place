@@ -138,6 +138,32 @@ class BottlePickPlace(object):
         self.arm_pos_cli.send_goal(traj_goal)
         self.arm_pos_cli.wait_for_result()
 
+    # *Depreciated*, but recorded as comment for posterity.
+    # calculate the SLERP trajectory between two quaterions.
+    # since we don't use Quaternions, but rather XYZRPY, this is not helpful.
+    # Might be useful later if we switch to using Quaternions.
+    #
+    # def slerp_calc(self, q_0, q_1, n_points, time):
+    #     # calculate a series of quaternion points along the SLERP trajectory
+    #     # that exists between quaternions q_0 and q_1. SLERP formula used is
+    #     # the Shoemake/Davis formula
+    #     dot_product = np.dot(q_0, q_1)
+    #     print(dot_product)
+    #     theta = np.arccos(dot_product)
+    #     stheta = np.sin(theta)
+    #     out = [q_0]
+    #     for q_index in range(1, n_points):
+    #         t_frac = (1/time) * (q_index/n_points)
+    #         sttheta = np.sin(t_frac * theta)
+    #         somttheta = np.sin((1 - t_frac) * theta)
+    #         coef_0 = somttheta / stheta
+    #         coef_1 = sttheta / stheta
+    #         q_iter = zip(q_0, q_1)
+    #         q_sub_point = [(coef_0 * qz) + (coef_1 * qo) for (qz, qo) in q_iter]
+    #         out.append(q_sub_point)
+    #     out.append(q_1)
+    #     return out
+
     def send_arm_traj_mid(self, q_m, q_f):
         # perform send_arm_traj but use a midpoint (q_m) and an end point (q_f)
         traj_goal = FollowJointTrajectoryGoal()
