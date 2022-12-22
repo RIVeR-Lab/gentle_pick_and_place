@@ -16,9 +16,11 @@ from scipy.spatial.transform import Rotation
 import scipy.linalg as linalg
 import copy
 
+# BottlePickPlace represents major functionality of the robot as a Python-style class.
 class BottlePickPlace(object):
     def __init__(self):
 
+        # set up IK/FK solvers
         self.base_link = 'base_link'
         self.ee_link = 'tool0'
         flag, self.tree = kdl_parser.treeFromParam('/robot_description')
@@ -27,6 +29,7 @@ class BottlePickPlace(object):
         self.pos_ik_solver = kdl.ChainIkSolverPos_LMA(self.chain)
         self.pos_fk_solver = kdl.ChainFkSolverPos_recursive(self.chain)
 
+        # set the internal joint attributes
         self.arm_joints = kdl.JntArrayVel(self.num_joints)
         self.joint_names = [
             'shoulder_pan_joint',
@@ -37,6 +40,7 @@ class BottlePickPlace(object):
             'wrist_3_joint'
         ]
 
+        # init rospy nodes, setting up subscribers, publishers, clients and services as necessary
         rospy.init_node('ur3e')
         rospy.Subscriber('/joint_states', JointState, self.arm_joint_state_cb)
         self.speed_scaling_pub = rospy.Publisher(
@@ -49,6 +53,12 @@ class BottlePickPlace(object):
         self.arm_pos_cli.wait_for_server()
 
     def arm_joint_state_cb(self, msg):
+        """
+        save the current joint state data. called whenever the '/joint_states' topic is updated.'
+        args:
+            msg (sensor_msgs.msg.JointState): the current state of the robot
+        """
+        # save position, swapping the order of the first and third joints in the input
         self.arm_joints.q[0] = msg.position[2]
         self.arm_joints.q[1] = msg.position[1]
         self.arm_joints.q[2] = msg.position[0]
@@ -56,6 +66,7 @@ class BottlePickPlace(object):
         self.arm_joints.q[4] = msg.position[4]
         self.arm_joints.q[5] = msg.position[5]
 
+        # save velocity, swapping the order of the first and third joints in the input
         self.arm_joints.qdot[0] = msg.velocity[2]
         self.arm_joints.qdot[1] = msg.velocity[1]
         self.arm_joints.qdot[2] = msg.velocity[0]
@@ -72,6 +83,14 @@ class BottlePickPlace(object):
         # print()
 
     def ik(self, pos, rot):
+        """
+        Perfrom the inverse kinematics transformation for the end effector/grabber.
+        Args:
+            pos (3-float list): XYZ coordinates of the desired end effector position
+            rot (3-float list): Roll, Pitch, Yaw orientation
+        Return:
+            q_sol (6-float list): degrees to which all joints should be rotated to reach the pos and rot passed in
+        """
         eef_pose = kdl.Frame(
             kdl.Rotation.RPY(*rot),
             kdl.Vector(*pos)
@@ -83,6 +102,8 @@ class BottlePickPlace(object):
         return list(q_sol)
 
     def ik_kdl(self, pose):
+        # performs the same work as self.ik, 
+        # except the pos and rot args are replaced with a kdl.Frame named pose
         q_init = self.arm_joints.q
         q_sol = kdl.JntArray(self.num_joints)
         result = self.pos_ik_solver.CartToJnt(q_init, pose, q_sol)
@@ -90,11 +111,14 @@ class BottlePickPlace(object):
         return list(q_sol)
 
     def fk(self):
+        # returns the current position of the robot end effector 
+        # helper funciton for the pick() and place() methods below
         eef_pose = kdl.Frame()
         self.pos_fk_solver.JntToCart(self.arm_joints.q, eef_pose)        
         return eef_pose
 
     def close_gripper(self):
+        # close the gripper on the end affector, picking whatever the gripper is above
         cmd = SetIORequest()
         cmd.fun = True
         cmd.state = False
@@ -102,6 +126,7 @@ class BottlePickPlace(object):
         self.io_cli.call(cmd)
 
     def open_gripper(self):
+        # open the gripper on the end affector, releasing any held items
         cmd = SetIORequest()
         cmd.fun = True
         cmd.state = True
@@ -110,13 +135,20 @@ class BottlePickPlace(object):
 
 
     def send_arm_traj(self, q):
+        """
+        command the robot to go to a specific place.
+        Works with joint rotations, aka the output of self.ik or self.ik_kdl
+        args:
+            q (6-float list): A list of joint rotations
+        """
+        
         traj_goal = FollowJointTrajectoryGoal()
         traj = JointTrajectory()
         traj.joint_names = self.joint_names
         traj_point = JointTrajectoryPoint()
         traj_point.positions = q
-        traj_point.velocities = [0.0] * self.num_joints
-        traj_point.time_from_start = rospy.Time(1.5)
+        traj_point.velocities = [0.0] * self.num_joints # tells the arm to stop moving once it's reached the position descibed by q
+        traj_point.time_from_start = rospy.Time(1.5) # says this change will occur over 1.5 seconds
 
         traj.points = [traj_point]
         traj_goal.trajectory = traj
@@ -127,17 +159,19 @@ class BottlePickPlace(object):
     def send_arm_traj_mpnb(self, q_list):
         # Multi-Point Non-Blended version of send_arm_traj
         # send the arm to a series of positions described as items in the q_list
+        # items in q_list are each viable inputs to sned_arm_traj
         traj_goal = FollowJointTrajectoryGoal()
         traj = JointTrajectory()
         traj.joint_names = self.joint_names
         points_list = []
 
         for q_x in range(len(q_list)):
+            # perform the JointTrajectoryPoint creation for each q in q_list
             q = q_list[q_x]
             traj_point = JointTrajectoryPoint()
             traj_point.positions = q
             traj_point.velocities = [0.0] * self.num_joints
-            traj_point.time_from_start = rospy.Time(3*(q_x+1)/len(q_list))
+            traj_point.time_from_start = rospy.Time(3*(q_x+1)/len(q_list)) # the robot should reach the final position in q_list after 3 seconds, and take an equal amoutn of time to reach each preceding position
             points_list.append(traj_point)
 
         traj.points = points_list
@@ -174,6 +208,7 @@ class BottlePickPlace(object):
 
     def send_arm_traj_mid(self, q_m, q_f):
         # perform send_arm_traj but use a midpoint (q_m) and an end point (q_f)
+        # similar to send_arm_traj_mpnb; interchangable if q_list = [q_m, q_f]
         traj_goal = FollowJointTrajectoryGoal()
         traj = JointTrajectory()
         traj.joint_names = self.joint_names
@@ -186,7 +221,7 @@ class BottlePickPlace(object):
         traj_point_f = JointTrajectoryPoint()
         traj_point_f.positions = q_f
         traj_point_f.velocities = [0.0] * self.num_joints
-        traj_point_f.time_from_start = rospy.Time(5)
+        traj_point_f.time_from_start = rospy.Time(3)
 
         traj.points = [traj_point_m, traj_point_f]
         traj_goal.trajectory = traj
@@ -195,12 +230,14 @@ class BottlePickPlace(object):
         self.arm_pos_cli.wait_for_result()
 
     def cluster_objects(self):
+        # call the object clustering server to see what items are on the table
         req = TabletopClusteringRequest()
         res = self.object_cluster_cli(req)
         objects = res.objects
         return objects
 
-    def select_grasp_pose(self, object):    
+    def select_grasp_pose(self, object):
+        # given an item pointcluster, calculate where the end effector must be to pick up that item
         grasp_pos = object.pose.position
         grasp_pos = [
             object.pose.position.x,
@@ -229,6 +266,7 @@ class BottlePickPlace(object):
         return grasp_pos, grasp_rot
 
     def pick(self):
+        # reach downward slightly and close gripper, then return to inital position
         current_pose = self.fk()
         pick_pose = copy.deepcopy(current_pose)
         pick_pose.p[2] -= 0.05
@@ -240,6 +278,7 @@ class BottlePickPlace(object):
         self.send_arm_traj(q)
 
     def place(self):
+        # reach downward slightly and release gripper, then return to inital position
         current_pose = self.fk()
         pick_pose = copy.deepcopy(current_pose)
         pick_pose.p[2] -= 0.1
@@ -251,7 +290,11 @@ class BottlePickPlace(object):
         self.send_arm_traj(q)
 
 
+# below code only runs if this file is executed directly. 
+# (if __name__ == "__main__" is a common python check to see if a 
+# file is running as an import or from executing as the 'main' file.)
 if __name__ == "__main__":
+    # load some basic positions, then init a BottlePickPlace robot object.
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
@@ -261,11 +304,14 @@ if __name__ == "__main__":
     demo = BottlePickPlace()
 
     demo.open_gripper()
-    for i in range(5):
+    for i in range(5): # pick up up to five items
         q_sol = demo.ik(home_pos, [np.pi, 0, 0])
         print("q_sol at line 253 equals", q_sol)
         demo.send_arm_traj(home_joint_state)
 
+        # get a random item from the object clustering server.
+        # The error that ends this program early when there are no more
+        # objects to pick up probably originates here?
         objects = demo.cluster_objects()
         rand_object_idx = np.random.choice(len(objects))
         object = objects[rand_object_idx]
@@ -273,13 +319,14 @@ if __name__ == "__main__":
                 object.pmax.x - object.pmin.x,
                 object.pmax.y - object.pmin.y]))
 
+        # calculate the position and rotation necessary to pick up the selected item.
         grasp_pos, grasp_rot = demo.select_grasp_pose(object)
         print("grasp pose =", grasp_pos, "\ngrasp rotation =", grasp_rot)
         # old call to send_arm_traj
         # q_sol = demo.ik(grasp_pos, grasp_rot)
         # demo.send_arm_traj(q_sol)
 
-        # new call to send_arm_traj_mpnb, using a single XYZ midpoint
+        # new call to send_arm_traj_mpnb, using a single XYZ midpoint between the current position and the XYZ of the grasping position
         midpoint_xyz = [0,0,0]
         for lcv in range(3):
             midpoint_xyz[lcv] = (grasp_pos[lcv] + home_pos[lcv]) / 2
@@ -304,6 +351,7 @@ if __name__ == "__main__":
         # q_sol = demo.ik(pre_place_pose, grasp_rot)
         # demo.send_arm_traj(q_sol)
 
+        # below if statement is where the sorting logic happens. If the max segment norm of the item is less than 0.15, then the object is to be a can; more than 0.15, and it's considered a bottle.
         if max_segment_norm < 0.15:
             place_pose = can_place_pose
         else:
@@ -311,6 +359,7 @@ if __name__ == "__main__":
         # q_sol = demo.ik(place_pose, grasp_rot)
         # demo.send_arm_traj(q_sol)
 
+        # go to the pre-place pose, then the place pose, before dropping the item
         q_sols = [demo.ik(pre_place_pose, grasp_rot),
                 demo.ik(place_pose, grasp_rot)]
         demo.send_arm_traj_mpnb(q_sols)
