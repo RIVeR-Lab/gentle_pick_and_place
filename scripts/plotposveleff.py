@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import re
+import math
 
 filename = "posveleff.txt" # the raw static data, saved locally
 
@@ -40,6 +41,7 @@ with open(filename, 'r') as f:
         # if the line contains "position", extract the numbers and append them sequentially to the j lists
         elif "position: " in line:
             poses = [float(i) for i in re.findall(r'[-]?\d(?:\.\d+)?', line)] #regex pattern-matches for positive or negative float strings. \d is python for [0-9].
+            poses = [i*(180.0/math.pi) for i in poses] # convert radians to degrees
             j1.append(poses[0])
             j2.append(poses[1])
             j3.append(poses[2])
