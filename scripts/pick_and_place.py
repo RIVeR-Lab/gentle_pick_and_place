@@ -42,7 +42,7 @@ class BottlePickPlace(object):
         rospy.Subscriber('/joint_states', JointState, self.arm_joint_state_cb)
         self.speed_scaling_pub = rospy.Publisher(
             '/speed_scaling_factor', Float64, queue_size=10)
-        self.speed_scaling_pub.publish(2.0)
+        # self.speed_scaling_pub.publish(2.0)
         self.arm_pos_cli = actionlib.SimpleActionClient(
             '/scaled_pos_joint_traj_controller/follow_joint_trajectory',
             FollowJointTrajectoryAction)
