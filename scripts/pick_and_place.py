@@ -6,7 +6,7 @@ import actionlib
 
 class RobotArmController:
     def __init__(self):
-        self.joint_names = ['joint1', 'joint2', 'joint3', 'joint4', 'joint5', 'joint6']
+        self.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
         self.home_positions = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
         self.amplitude_range = (-0.5, 0.5)  # Range for the amplitude of the sinusoidal wave
         self.frequency_range = (0.1, 2.0)  # Range for the frequency of the sinusoidal wave
