@@ -8,7 +8,7 @@ class RobotArmController:
     def __init__(self):
         self.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
         self.home_positions = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-        self.amplitude_range = (-0.5, 0.5)  # Range for the amplitude of the sinusoidal wave
+        self.amplitude_range = (-0.1, 0.1)  # Range for the amplitude of the sinusoidal wave
         self.frequency_range = (0.1, 2.0)  # Range for the frequency of the sinusoidal wave
         self.duration = 5.0  # Duration of the movement in seconds
 
