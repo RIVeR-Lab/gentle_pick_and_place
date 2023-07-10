@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import rospy
 import numpy as np
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
