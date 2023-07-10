@@ -1,88 +1,97 @@
 #!/usr/bin/env python3
+import scipy
 import rospy
-import numpy as np
-from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
-from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 import actionlib
+import numpy as np
+import PyKDL as kdl
+import kdl_parser_py.urdf as kdl_parser 
+from sensor_msgs.msg import JointState
+from std_msgs.msg import Float64
+from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
+from control_msgs.msg import FollowJointTrajectoryAction
+from control_msgs.msg import FollowJointTrajectoryGoal
+from scipy.spatial.transform import Rotation
+import scipy.linalg as linalg
+import tf2_ros
 
-class RobotArmController:
+class SinusoidalMotion(object):
     def __init__(self):
-        self.joint_names = ['shoulder_pan_joint', 'shoulder_lift_joint', 'elbow_joint', 'wrist_1_joint', 'wrist_2_joint', 'wrist_3_joint']
-        self.home_positions = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-        self.amplitude_range = (-0.1, 0.1)  # Range for the amplitude of the sinusoidal wave
-        self.frequency_range = (0.1, 2.0)  # Range for the frequency of the sinusoidal wave
-        self.duration = 5.0  # Duration of the movement in seconds
+        self.base_link = 'base_link'
+        self.ee_link = 'tool0'
+        flag, self.tree = kdl_parser.treeFromParam('/robot_description')
+        self.chain = self.tree.getChain(self.base_link, self.ee_link)
+        self.num_joints = self.tree.getNrOfJoints()
+        self.pos_ik_solver = kdl.ChainIkSolverPos_LMA(self.chain)
+        self.pos_fk_solver = kdl.ChainFkSolverPos_recursive(self.chain)
 
-        self.client = actionlib.SimpleActionClient('/arm_controller/follow_joint_trajectory',
-                                                   FollowJointTrajectoryAction)
-        self.client.wait_for_server()
+        self.arm_joints = kdl.JntArrayVel(self.num_joints)
+        self.joint_names = [
+            'shoulder_pan_joint',
+            'shoulder_lift_joint',
+            'elbow_joint',
+            'wrist_1_joint',
+            'wrist_2_joint',
+            'wrist_3_joint'
+        ]
 
-    def move_to_home_position(self):
-        joint_traj = JointTrajectory()
-        joint_traj.joint_names = self.joint_names
-        point = JointTrajectoryPoint()
-        point.positions = self.home_positions
-        point.time_from_start = rospy.Duration(2.0)  # Time to reach the home position
-        joint_traj.points.append(point)
+        rospy.init_node('ur3e')
+        rospy.Subscriber('/joint_states', JointState, self.arm_joint_state_cb)
+        self.arm_pos_cli = actionlib.SimpleActionClient(
+            '/scaled_pos_joint_traj_controller/follow_joint_trajectory',
+            FollowJointTrajectoryAction)
+        self.arm_pos_cli.wait_for_server()
 
-        goal = FollowJointTrajectoryGoal()
-        goal.trajectory = joint_traj
-        self.client.send_goal(goal)
-        self.client.wait_for_result()
+    def arm_joint_state_cb(self, msg):
+        for i in range(self.num_joints):
+            self.arm_joints.q[i] = msg.position[i]
+            self.arm_joints.qdot[i] = msg.velocity[i]
 
-    def move_in_sinusoidal_wave(self, amplitude, frequency):
-        rate = rospy.Rate(10)  # Control loop rate (10 Hz)
-        start_time = rospy.Time.now()
+    def send_arm_traj(self, q):
+        traj_goal = FollowJointTrajectoryGoal()
+        traj = JointTrajectory()
+        traj.joint_names = self.joint_names
+        traj_point = JointTrajectoryPoint()
+        traj_point.positions = q
+        traj_point.velocities = [0.0] * self.num_joints
+        traj_point.time_from_start = rospy.Time(1.5)
 
-        while not rospy.is_shutdown():
-            t = (rospy.Time.now() - start_time).to_sec()
+        traj.points = [traj_point]
+        traj_goal.trajectory = traj
+        
+        self.arm_pos_cli.send_goal(traj_goal)
+        self.arm_pos_cli.wait_for_result()
 
-            # Calculate the desired joint positions based on a sinusoidal wave
-            joint_positions = []
-            for i in range(len(self.joint_names)):
-                joint_positions.append(
-                    amplitude * np.sin(2 * np.pi * frequency * t))
+    def execute_sinusoidal_motion(self, amplitude, frequency):
+        # Starting the sinusoidal motion
+        duration = 2 * np.pi / frequency
+        t = np.arange(0.0, duration, 0.01)
+        positions = amplitude * np.sin(2 * np.pi * frequency * t)
 
-            # Create a joint trajectory message
-            joint_traj = JointTrajectory()
-            joint_traj.joint_names = self.joint_names
-            point = JointTrajectoryPoint()
-            point.positions = joint_positions
-            point.time_from_start = rospy.Duration.from_sec(t)
-            joint_traj.points.append(point)
+        for pos in positions:
+            q = [pos] * self.num_joints  # We are moving all the joints in a sinusoidal manner
+            self.send_arm_traj(q)
 
-            # Send the joint trajectory to the robot controller
-            goal = FollowJointTrajectoryGoal()
-            goal.trajectory = joint_traj
-            self.client.send_goal(goal)
+if __name__ == "__main__":
+    home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
+    sinusoidal_motion = SinusoidalMotion()
 
-            # Break the loop if the duration has elapsed
-            if t >= self.duration:
-                break
+    # User input for amplitude and frequency
+    amplitude = float(input("Enter the amplitude (0.1-1.0): "))
+    frequency = float(input("Enter the frequency (0.1-1.0 Hz): "))
 
-            rate.sleep()
+    # Check if user input is within acceptable range
+    if not (0.1 <= amplitude <= 1.0):
+        print("Invalid amplitude! Please enter a value between 0.1 and 1.0.")
+        exit(1)
+    if not (0.1 <= frequency <= 1.0):
+        print("Invalid frequency! Please enter a value between 0.1 and 1.0 Hz.")
+        exit(1)
 
-        self.move_to_home_position()
+    # Send the robot to home position
+    sinusoidal_motion.send_arm_traj(home_joint_state)
 
-    def get_user_input(self):
-        amplitude = self.get_validated_user_input("Enter the amplitude (between {} and {}): ".format(self.amplitude_range[0], self.amplitude_range[1]), self.amplitude_range)
-        frequency = self.get_validated_user_input("Enter the frequency (between {} and {}): ".format(self.frequency_range[0], self.frequency_range[1]), self.frequency_range)
-        return amplitude, frequency
+    # Execute sinusoidal motion with user defined amplitude and frequency
+    sinusoidal_motion.execute_sinusoidal_motion(amplitude, frequency)
 
-    def get_validated_user_input(self, prompt, value_range):
-        while True:
-            try:
-                value = float(input(prompt))
-                if value_range[0] <= value <= value_range[1]:
-                    return value
-                else:
-                    print("Input out of range. Please enter a value between {} and {}.".format(value_range[0], value_range[1]))
-            except ValueError:
-                print("Invalid input. Please enter a numeric value.")
-
-if __name__ == '__main__':
-    rospy.init_node('robot_arm_controller_node')
-    controller = RobotArmController()
-    controller.move_to_home_position()
-    amplitude, frequency = controller.get_user_input()
-    controller.move_in_sinusoidal_wave(amplitude, frequency)
+    # Send the robot back to home position
+    sinusoidal_motion.send_arm_traj(home_joint_state)
