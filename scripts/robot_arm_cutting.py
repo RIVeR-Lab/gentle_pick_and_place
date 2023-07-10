@@ -83,8 +83,8 @@ if __name__ == "__main__":
     if not (0.1 <= amplitude <= 1.0):
         print("Invalid amplitude! Please enter a value between 0.1 and 1.0.")
         exit(1)
-    if not (0.1 <= frequency <= 1.0):
-        print("Invalid frequency! Please enter a value between 0.1 and 1.0 Hz.")
+    if not (0.0001<= frequency <= 0.001):
+        print("Invalid frequency! Please enter a value between 0.0001 and 0.001 Hz.")
         exit(1)
 
     # Send the robot to home position
