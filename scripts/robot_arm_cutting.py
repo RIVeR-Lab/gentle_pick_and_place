@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     # User input for amplitude and frequency
     amplitude = float(input("Enter the amplitude (0.1-1.0): "))
-    frequency = float(input("Enter the frequency (0.1-1.0 Hz): "))
+    frequency = float(input("Enter the frequency (0.0001-0.001 Hz): "))
 
     # Check if user input is within acceptable range
     if not (0.1 <= amplitude <= 1.0):
