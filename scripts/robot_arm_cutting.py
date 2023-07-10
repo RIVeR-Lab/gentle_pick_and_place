@@ -76,12 +76,12 @@ if __name__ == "__main__":
     sinusoidal_motion = SinusoidalMotion()
 
     # User input for amplitude and frequency
-    amplitude = float(input("Enter the amplitude (0.1-1.0): "))
+    amplitude = float(input("Enter the amplitude (0.01 - 0.1): "))
     frequency = float(input("Enter the frequency (0.0001-0.001 Hz): "))
 
     # Check if user input is within acceptable range
-    if not (0.1 <= amplitude <= 1.0):
-        print("Invalid amplitude! Please enter a value between 0.1 and 1.0.")
+    if not (0.01 <= amplitude <= 0.1):
+        print("Invalid amplitude! Please enter a value between 0.01 and 0.1")
         exit(1)
     if not (0.0001<= frequency <= 0.001):
         print("Invalid frequency! Please enter a value between 0.0001 and 0.001 Hz.")
