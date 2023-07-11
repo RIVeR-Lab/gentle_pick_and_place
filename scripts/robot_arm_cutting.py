@@ -98,3 +98,16 @@ if __name__ == "__main__":
 
     # Send the robot back to home position
     sinusoidal_motion.send_arm_traj(home_joint_state)
+
+
+
+river@riverlab-congo:~$ rosrun pick_and_place robot_arm_cutting.py 
+Enter the amplitude (0.01-0.1): 0.05
+Enter the frequency (0.0001-0.001 Hz): 0.0005
+Traceback (most recent call last):
+  File "/home/river/ur_ws/src/pick_and_place/scripts/robot_arm_cutting.py", line 97, in <module>
+    sinusoidal_motion.execute_sinusoidal_motion(amplitude, frequency)
+  File "/home/river/ur_ws/src/pick_and_place/scripts/robot_arm_cutting.py", line 66, in execute_sinusoidal_motion
+    self.pos_fk_solver.JntToCart(start_pos, start_pos)
+TypeError: JntToCart(self, q_in: JntArray, p_out: Frame, segmentNr: int = -1): argument 2 has unexpected type 'JntArray'
+river@riverlab-congo:~$ 
