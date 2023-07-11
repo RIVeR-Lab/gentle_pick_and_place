@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
-import scipy
 import rospy
 import actionlib
 import numpy as np
 import PyKDL as kdl
 import kdl_parser_py.urdf as kdl_parser 
 from sensor_msgs.msg import JointState
-from std_msgs.msg import Float64
-from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
-from control_msgs.msg import FollowJointTrajectoryAction
-from control_msgs.msg import FollowJointTrajectoryGoal
-from scipy.spatial.transform import Rotation
-import scipy.linalg as linalg
+from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
+from control_msgs.msg import FollowJointTrajectoryAction, FollowJointTrajectoryGoal
 import tf2_ros
+import tf2_kdl
 
 class SinusoidalMotion(object):
     def __init__(self):
@@ -24,7 +20,7 @@ class SinusoidalMotion(object):
         self.pos_ik_solver = kdl.ChainIkSolverPos_LMA(self.chain)
         self.pos_fk_solver = kdl.ChainFkSolverPos_recursive(self.chain)
 
-        self.arm_joints = kdl.JntArrayVel(self.num_joints)
+        self.arm_joints = kdl.JntArray(self.num_joints)
         self.joint_names = [
             'shoulder_pan_joint',
             'shoulder_lift_joint',
@@ -43,8 +39,7 @@ class SinusoidalMotion(object):
 
     def arm_joint_state_cb(self, msg):
         for i in range(self.num_joints):
-            self.arm_joints.q[i] = msg.position[i]
-            self.arm_joints.qdot[i] = msg.velocity[i]
+            self.arm_joints[i] = msg.position[i]
 
     def send_arm_traj(self, q):
         traj_goal = FollowJointTrajectoryGoal()
@@ -67,8 +62,16 @@ class SinusoidalMotion(object):
         t = np.arange(0.0, duration, 0.01)
         positions = amplitude * np.sin(2 * np.pi * frequency * t)
 
-        for pos in positions:
-            q = [pos] * self.num_joints  # We are moving all the joints in a sinusoidal manner
+        start_pos = kdl.JntArray(self.num_joints)
+        self.pos_fk_solver.JntToCart(start_pos, start_pos)
+
+        for i, pos in enumerate(positions):
+            desired_pos = start_pos
+            desired_pos.p[0] += pos  # Adding sinusoidal motion in X axis
+            desired_pos.p[1] += i * 0.01  # Linear motion in Y axis
+
+            q = kdl.JntArray(self.num_joints)
+            self.pos_ik_solver.CartToJnt(self.arm_joints, desired_pos, q)
             self.send_arm_traj(q)
 
 if __name__ == "__main__":
@@ -76,14 +79,14 @@ if __name__ == "__main__":
     sinusoidal_motion = SinusoidalMotion()
 
     # User input for amplitude and frequency
-    amplitude = float(input("Enter the amplitude (0.01 - 0.1): "))
+    amplitude = float(input("Enter the amplitude (0.01-0.1): "))
     frequency = float(input("Enter the frequency (0.0001-0.001 Hz): "))
 
     # Check if user input is within acceptable range
     if not (0.01 <= amplitude <= 0.1):
-        print("Invalid amplitude! Please enter a value between 0.01 and 0.1")
+        print("Invalid amplitude! Please enter a value between 0.01 and 0.1.")
         exit(1)
-    if not (0.0001<= frequency <= 0.001):
+    if not (0.0001 <= frequency <= 0.001):
         print("Invalid frequency! Please enter a value between 0.0001 and 0.001 Hz.")
         exit(1)
 
