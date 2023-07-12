@@ -46,7 +46,13 @@ class SinusoidalMotion(object):
         traj = JointTrajectory()
         traj.joint_names = self.joint_names
         traj_point = JointTrajectoryPoint()
+<<<<<<< HEAD
         traj_point.positions = q[:]  # convert JntArray to list
+=======
+
+        # Convert the JntArray to a list.
+        traj_point.positions = [q[i] for i in range(self.num_joints)]
+>>>>>>> c2f82e66a3cd9024e3f47ff7c78f8dcc23775bbc
         traj_point.velocities = [0.0] * self.num_joints
         traj_point.time_from_start = rospy.Time(1.5)
 
