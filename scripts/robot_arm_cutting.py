@@ -63,7 +63,9 @@ class SinusoidalMotion(object):
         positions = amplitude * np.sin(2 * np.pi * frequency * t)
 
         start_pos = kdl.JntArray(self.num_joints)
-        self.pos_fk_solver.JntToCart(start_pos, start_pos)
+        # Assuming start_pos is of type JntArray and end_effector_pose is of type Frame
+        self.pos_fk_solver.JntToCart(start_pos, end_effector_pose)
+
 
         for i, pos in enumerate(positions):
             desired_pos = start_pos
@@ -101,13 +103,4 @@ if __name__ == "__main__":
 
 
 
-river@riverlab-congo:~$ rosrun pick_and_place robot_arm_cutting.py 
-Enter the amplitude (0.01-0.1): 0.05
-Enter the frequency (0.0001-0.001 Hz): 0.0005
-Traceback (most recent call last):
-  File "/home/river/ur_ws/src/pick_and_place/scripts/robot_arm_cutting.py", line 97, in <module>
-    sinusoidal_motion.execute_sinusoidal_motion(amplitude, frequency)
-  File "/home/river/ur_ws/src/pick_and_place/scripts/robot_arm_cutting.py", line 66, in execute_sinusoidal_motion
-    self.pos_fk_solver.JntToCart(start_pos, start_pos)
-TypeError: JntToCart(self, q_in: JntArray, p_out: Frame, segmentNr: int = -1): argument 2 has unexpected type 'JntArray'
-river@riverlab-congo:~$ 
+
