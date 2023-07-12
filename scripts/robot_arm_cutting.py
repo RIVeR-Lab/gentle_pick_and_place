@@ -63,12 +63,11 @@ class SinusoidalMotion(object):
         positions = amplitude * np.sin(2 * np.pi * frequency * t)
 
         start_pos = kdl.JntArray(self.num_joints)
-        # Assuming start_pos is of type JntArray and end_effector_pose is of type Frame
-        self.pos_fk_solver.JntToCart(start_pos, end_effector_pose)
-
+        frame = kdl.Frame()  # Create a new frame object
+        self.pos_fk_solver.JntToCart(start_pos, frame)
 
         for i, pos in enumerate(positions):
-            desired_pos = start_pos
+            desired_pos = frame
             desired_pos.p[0] += pos  # Adding sinusoidal motion in X axis
             desired_pos.p[1] += i * 0.01  # Linear motion in Y axis
 
@@ -100,7 +99,3 @@ if __name__ == "__main__":
 
     # Send the robot back to home position
     sinusoidal_motion.send_arm_traj(home_joint_state)
-
-
-
-
