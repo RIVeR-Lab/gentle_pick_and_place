@@ -41,12 +41,19 @@ class SinusoidalMotion(object):
         for i in range(self.num_joints):
             self.arm_joints[i] = msg.position[i]
 
+    def jntarray_to_list(self, q):
+        q_list = [q[i] for i in range(self.num_joints)]
+        return q_list
+
+
     def send_arm_traj(self, q):
+        q_list = self.jntarray_to_list(q)
+
         traj_goal = FollowJointTrajectoryGoal()
         traj = JointTrajectory()
         traj.joint_names = self.joint_names
         traj_point = JointTrajectoryPoint()
-        traj_point.positions = q[:]  # convert JntArray to list
+        traj_point.positions = q_list  # use list version
         traj_point.velocities = [0.0] * self.num_joints
         traj_point.time_from_start = rospy.Time(1.5)
 
@@ -55,8 +62,7 @@ class SinusoidalMotion(object):
 
         self.arm_pos_cli.send_goal(traj_goal)
         self.arm_pos_cli.wait_for_result()
-
-
+        
 
     def execute_sinusoidal_motion(self, amplitude, frequency):
         # Starting the sinusoidal motion
