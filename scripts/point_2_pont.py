@@ -66,7 +66,7 @@ class RobotArmMotion(object):
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # Define the arbitrary joint angles
-    arbitrary_joint_state = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
+    arbitrary_joint_state = [0.15, -0.45, 0.3]
     robot_arm_motion = RobotArmMotion()
 
     # Send the robot to home position

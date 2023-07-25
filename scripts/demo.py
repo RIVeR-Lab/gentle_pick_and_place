@@ -10,7 +10,7 @@ from std_msgs.msg import Float64
 from trajectory_msgs.msg import JointTrajectoryPoint, JointTrajectory
 from control_msgs.msg import FollowJointTrajectoryAction
 from control_msgs.msg import FollowJointTrajectoryGoal
-from point_cloud_proc.srv import *
+# from point_cloud_proc.srv import *
 from ur_msgs.srv import *
 from scipy.spatial.transform import Rotation
 import scipy.linalg as linalg
@@ -177,7 +177,6 @@ class BottlePickPlace(object):
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-    home_joint_state.fk
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
     pre_place_pose = [0.4, 0.0, 0.3]
