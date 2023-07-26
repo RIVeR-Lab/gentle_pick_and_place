@@ -54,7 +54,7 @@ class RobotArmMotion(object):
         traj_point = JointTrajectoryPoint()
         traj_point.positions = q_list  # use list version
         traj_point.velocities = [0.0] * self.num_joints
-        traj_point.time_from_start = rospy.Time(1.5)
+        traj_point.time_from_start = rospy.Time(5.0)
 
         traj.points = [traj_point]
         traj_goal.trajectory = traj
@@ -84,7 +84,7 @@ class RobotArmMotion(object):
 
 if __name__ == "__main__":
     home_xyz = [0.15, 0.45, 0.3]  
-    way_point1_xyz = [0.1, 0.2, 0.3]  
+    way_point1_xyz = [0.15, -0.45, 0.3]  
     # way_point2_xyz = [0.2, 0.3, 0.4]  
     # way_point3_xyz = [0.3, 0.4, 0.5]  
 
