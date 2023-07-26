@@ -83,10 +83,10 @@ class RobotArmMotion(object):
 
 
 if __name__ == "__main__":
-    home_xyz = [0.0, 0.0, 0.1]  # Change these
-    way_point1_xyz = [0.1, 0.2, 0.3]  # Change these
-    way_point2_xyz = [0.2, 0.3, 0.4]  # Change these
-    way_point3_xyz = [0.3, 0.4, 0.5]  # Change these
+    home_xyz = [0.0, 0.0, 0.1]  
+    way_point1_xyz = [0.1, 0.2, 0.3]  
+    way_point2_xyz = [0.2, 0.3, 0.4]  
+    way_point3_xyz = [0.3, 0.4, 0.5]  
 
     robot_arm_motion = RobotArmMotion()
 
