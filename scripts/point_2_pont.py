@@ -83,8 +83,8 @@ class RobotArmMotion(object):
 
 
 if __name__ == "__main__":
-    home_xyz = [-59.12, -371.26, -153.78]  
-    way_point1_xyz = [-76.45, 368.08, -153.77]  
+    home_xyz = [-0.059, -0.37126, -0.15378]  
+    way_point1_xyz = [-0.07645, 0.378, -0.15378]  
     # way_point2_xyz = [0.2, 0.3, 0.4]  
     # way_point3_xyz = [0.3, 0.4, 0.5]  
 
