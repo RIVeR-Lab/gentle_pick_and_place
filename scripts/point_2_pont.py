@@ -94,7 +94,7 @@ class RobotArmMotion(object):
 
 if __name__ == "__main__":
     home_joint_angles = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1] 
-    way_point1_xyz = [-0.2, 0.5, 0.2]  
+    way_point1_xyz = [-0.2, 0.45, 0.2]  
     # way_point2_xyz = [0.2, 0.3, 0.4]  
     # way_point3_xyz = [0.3, 0.4, 0.5]  
 
