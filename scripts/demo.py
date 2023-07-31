@@ -28,7 +28,7 @@ class BottlePickPlace(object):
         self.pos_ik_solver = kdl.ChainIkSolverPos_LMA(self.chain)
         self.pos_fk_solver = kdl.ChainFkSolverPos_recursive(self.chain)
 
-        self.arm_joints = kdl.JntArrayVel(self.num_joints)
+        self.arm_joints = kdl.JntArray(self.num_joints)
         self.joint_names = [
             'shoulder_pan_joint',
             'shoulder_lift_joint',
@@ -40,14 +40,9 @@ class BottlePickPlace(object):
 
         rospy.init_node('ur3e')
         rospy.Subscriber('/joint_states', JointState, self.arm_joint_state_cb)
-        self.speed_scaling_pub = rospy.Publisher(
-            '/speed_scaling_factor', Float64, queue_size=10)
-        # self.speed_scaling_pub.publish(2.0)
         self.arm_pos_cli = actionlib.SimpleActionClient(
             '/scaled_pos_joint_traj_controller/follow_joint_trajectory',
             FollowJointTrajectoryAction)
-        self.object_cluster_cli = rospy.ServiceProxy('/pick_and_place/cluster_objects', TabletopClustering)
-        self.io_cli = rospy.ServiceProxy('/ur_hardware_interface/set_io', SetIO)
         self.arm_pos_cli.wait_for_server()
 
     def arm_joint_state_cb(self, msg):
@@ -151,28 +146,6 @@ class BottlePickPlace(object):
         grasp_rot = grasp_rot.as_euler(seq='xyz')
 
         return grasp_pos, grasp_rot
-
-    def pick(self):
-        current_pose = self.fk()
-        pick_pose = copy.deepcopy(current_pose)
-        pick_pose.p[2] -= 0.05
-        q = self.ik_kdl(pick_pose)
-        self.send_arm_traj(q)
-        self.close_gripper()
-        rospy.sleep(0.5)
-        q = self.ik_kdl(current_pose)
-        self.send_arm_traj(q)
-
-    def place(self):
-        current_pose = self.fk()
-        pick_pose = copy.deepcopy(current_pose)
-        pick_pose.p[2] -= 0.1
-        q = self.ik_kdl(pick_pose)
-        self.send_arm_traj(q)
-        self.open_gripper()
-        rospy.sleep(0.5)
-        q = self.ik_kdl(current_pose)
-        self.send_arm_traj(q)
 
 
 if __name__ == "__main__":
