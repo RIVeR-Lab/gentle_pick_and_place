@@ -100,11 +100,11 @@ if __name__ == "__main__":
 
     robot_arm_motion = RobotArmMotion()
 
-    robot_arm_motion.send_arm_traj(*home_xyz)
+    robot_arm_motion.send_arm_traj(home_xyz)
     robot_arm_motion.send_arm_traj_xyz(*way_point1_xyz)
     # robot_arm_motion.send_arm_traj_xyz(*way_point2_xyz)
     # robot_arm_motion.send_arm_traj_xyz(*way_point3_xyz)
-    robot_arm_motion.send_arm_traj(*home_xyz)
+    robot_arm_motion.send_arm_traj(home_xyz)
 
     # # Defining the Home Position
     # home_joint_state = kdl.JntArray(6)
