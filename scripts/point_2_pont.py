@@ -65,7 +65,7 @@ class RobotArmMotion(object):
     def xyz_to_jnt(self, x, y, z):
         # Define workspace limits
         min_x, max_x = -0.5, 0.5  # Set your desired limits for X
-        min_y, max_y = -0.5, 0.5  # Set your desired limits for Y
+        min_y, max_y = -0.45, 0.45  # Set your desired limits for Y
         min_z, max_z = 0.0, 0.8   # Set your desired limits for Z
 
         # Check if the desired position is within the workspace limits
@@ -93,8 +93,8 @@ class RobotArmMotion(object):
 
 
 if __name__ == "__main__":
-    home_xyz = [0.15, 0.5, 0.3]  
-    way_point1_xyz = [0.15, -0.5, 0.3]  
+    home_xyz = [0.15, 0.45, 0.3]  
+    way_point1_xyz = [0.15, -0.45, 0.3]  
     # way_point2_xyz = [0.2, 0.3, 0.4]  
     # way_point3_xyz = [0.3, 0.4, 0.5]  
 
