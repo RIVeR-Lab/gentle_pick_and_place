@@ -66,7 +66,7 @@ class RobotArmMotion(object):
         # Define workspace limits
         min_x, max_x = -0.5, 0.5  # Set your desired limits for X
         min_y, max_y = -0.45, 0.45  # Set your desired limits for Y
-        min_z, max_z = 0.0, 0.8   # Set your desired limits for Z
+        min_z, max_z = 0.0, 0.5   # Set your desired limits for Z
 
         # Check if the desired position is within the workspace limits
         if not (min_x <= x <= max_x and min_y <= y <= max_y and min_z <= z <= max_z):
