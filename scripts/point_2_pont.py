@@ -63,6 +63,16 @@ class RobotArmMotion(object):
         self.arm_pos_cli.wait_for_result()
 
     def xyz_to_jnt(self, x, y, z):
+        # Define workspace limits
+        min_x, max_x = -0.5, 0.5  # Set your desired limits for X
+        min_y, max_y = -0.5, 0.5  # Set your desired limits for Y
+        min_z, max_z = 0.0, 0.8   # Set your desired limits for Z
+
+        # Check if the desired position is within the workspace limits
+        if not (min_x <= x <= max_x and min_y <= y <= max_y and min_z <= z <= max_z):
+            rospy.logwarn("Desired position is out of the robot's workspace.")
+            return None
+
         desired_pose = kdl.Frame(kdl.Vector(x, y, z))
 
         # Use IK solver to compute joint angles
@@ -83,8 +93,8 @@ class RobotArmMotion(object):
 
 
 if __name__ == "__main__":
-    home_xyz = [0.15, 0.45, 0.3]  
-    way_point1_xyz = [0.15, -0.45, 0.3]  
+    home_xyz = [0.15, 0.5, 0.3]  
+    way_point1_xyz = [0.15, -0.5, 0.3]  
     # way_point2_xyz = [0.2, 0.3, 0.4]  
     # way_point3_xyz = [0.3, 0.4, 0.5]  
 
