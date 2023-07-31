@@ -177,11 +177,11 @@ class BottlePickPlace(object):
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-    # home_pos = [0.0, 0.4, 0.3]
-    # # home_rot = [np.pi, 0, 0]
-    pre_place_pose = [0.4, 0.0, 0.3]
-    default_bottle_place_pose = [0.15, 0.45, 0.3]
-    default_can_place_pose = [0.15, -0.45, 0.3]
-    bottle_place_pose = default_bottle_place_pose
-    can_place_pose = default_can_place_pose
+    waypoint_1= [0.4, 0.0, 0.3]
+    waypoint_2 = [0.15, -0.45, 0.3]
     demo = BottlePickPlace()
+
+    demo.send_arm_traj(home_joint_state)
+    demo.send_arm_traj(waypoint_1)
+    demo.send_arm_traj(waypoint_2)
+    demo.send_arm_traj(home_joint_state)
