@@ -147,34 +147,34 @@ if __name__ == "__main__":
     # for i, val in enumerate([5.0, -1.80, -0.80, -2.0, 1.57, 0.1]):
     #     home_joint_state[i] = val
 
-    # # Defining the first way point
-    # way_point1 = kdl.JntArray(6)
-    # for i, val in enumerate([2.2, -2.39, -0.44, -1.902, 1.69, 0.26]):  # also make sure this has the correct number of joints
-    #     way_point1[i] = val
+    # Defining the first way point
+    way_point1 = kdl.JntArray(6)
+    for i, val in enumerate([2.2, -2.39, -0.44, -1.902, 1.69, 0.26]):  # also make sure this has the correct number of joints
+        way_point1[i] = val
 
-    # # Defining the second way point
-    # way_point2 = kdl.JntArray(6)
-    # for i, val in enumerate([3.23, -2.39, -0.46, -1.79, 1.64, 0.26]):  # also make sure this has the correct number of joints
-    #     way_point2[i] = val
+    # Defining the second way point
+    way_point2 = kdl.JntArray(6)
+    for i, val in enumerate([3.23, -2.39, -0.46, -1.79, 1.64, 0.26]):  # also make sure this has the correct number of joints
+        way_point2[i] = val
 
-    # # Defining the third way point
-    # way_point3 = kdl.JntArray(6)
-    # for i, val in enumerate([4.0, -2.41, -0.45, -1.75, 1.64, 0.26]):  # also make sure this has the correct number of joints
-    #     way_point3[i] = val
+    # Defining the third way point
+    way_point3 = kdl.JntArray(6)
+    for i, val in enumerate([4.0, -2.41, -0.45, -1.75, 1.64, 0.26]):  # also make sure this has the correct number of joints
+        way_point3[i] = val
 
-    # robot_arm_motion = RobotArmMotion()
+    robot_arm_motion = RobotArmMotion()
 
-    # # Send the robot to home position
-    # robot_arm_motion.send_arm_traj(home_joint_state)
+    # Send the robot to home position
+    robot_arm_motion.send_arm_traj(home_joint_state)
 
-    # # Send the robot to the first way point
-    # robot_arm_motion.send_arm_traj(way_point1)
+    # Send the robot to the first way point
+    robot_arm_motion.send_arm_traj(way_point1)
 
-    # # Send the robot to the second way point
-    # robot_arm_motion.send_arm_traj(way_point2)
+    # Send the robot to the second way point
+    robot_arm_motion.send_arm_traj(way_point2)
 
-    # # Send the robot to the third way point
-    # robot_arm_motion.send_arm_traj(way_point3)
+    # Send the robot to the third way point
+    robot_arm_motion.send_arm_traj(way_point3)
 
-    # # Send the robot back the home position
-    # robot_arm_motion.send_arm_traj(home_joint_state)
+    # Send the robot back the home position
+    robot_arm_motion.send_arm_traj(home_joint_state)
