@@ -142,10 +142,10 @@ if __name__ == "__main__":
     # robot_arm_motion.send_arm_traj(home_joint_angles)  
 
 
-    # # Defining the Home Position
-    # home_joint_state = kdl.JntArray(6)
-    # for i, val in enumerate([5.0, -1.80, -0.80, -2.0, 1.57, 0.1]):
-    #     home_joint_state[i] = val
+    # Defining the Home Position
+    home_joint_state = kdl.JntArray(6)
+    for i, val in enumerate([5.0, -1.80, -0.80, -2.0, 1.57, 0.1]):
+        home_joint_state[i] = val
 
     # Defining the first way point
     way_point1 = kdl.JntArray(6)
