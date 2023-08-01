@@ -37,6 +37,41 @@ class RobotArmMotion(object):
             FollowJointTrajectoryAction)
         self.arm_pos_cli.wait_for_server()
 
+
+    def clip_joint_limits(self, q):
+        # Define joint limits for each joint (in radians)
+        joint_limits = [
+            (2.35, 4.7),  # shoulder_pan_joint
+            (0, 0),  # shoulder_lift_joint
+            (-0.79, 0),  # elbow_joint    
+            (-2.09, 1.05),  # wrist_1_joint
+            (0.523, 2.618),  # wrist_2_joint
+            (-0, 0)   # wrist_3_joint
+            ]
+
+        # Clip the joint positions to the valid range
+        q_clip = [np.clip(q[i], joint_limits[i][0], joint_limits[i][1]) for i in range(self.num_joints)]
+        return q_clip
+
+    def send_arm_traj(self, q):
+        # Clip the joint positions to the valid range
+        q_clip = self.clip_joint_limits(q)
+
+        traj_goal = FollowJointTrajectoryGoal()
+        traj = JointTrajectory()
+        traj.joint_names = self.joint_names
+        traj_point = JointTrajectoryPoint()
+        traj_point.positions = q_clip
+        traj_point.velocities = [0.0] * self.num_joints
+        traj_point.time_from_start = rospy.Time(5.0)
+
+        traj.points = [traj_point]
+        traj_goal.trajectory = traj
+            
+        self.arm_pos_cli.send_goal(traj_goal)
+        self.arm_pos_cli.wait_for_result()
+
+
     def arm_joint_state_cb(self, msg):
         for i in range(self.num_joints):
             self.arm_joints[i] = msg.position[i]
@@ -45,22 +80,22 @@ class RobotArmMotion(object):
         q_list = [q[i] for i in range(self.num_joints)]
         return q_list
 
-    def send_arm_traj(self, q):
-        q_list = self.jntarray_to_list(q)
+    # def send_arm_traj(self, q):
+    #     q_list = self.jntarray_to_list(q)
 
-        traj_goal = FollowJointTrajectoryGoal()
-        traj = JointTrajectory()
-        traj.joint_names = self.joint_names
-        traj_point = JointTrajectoryPoint()
-        traj_point.positions = q_list  # use list version
-        traj_point.velocities = [0.0] * self.num_joints
-        traj_point.time_from_start = rospy.Time(5.0)
+    #     traj_goal = FollowJointTrajectoryGoal()
+    #     traj = JointTrajectory()
+    #     traj.joint_names = self.joint_names
+    #     traj_point = JointTrajectoryPoint()
+    #     traj_point.positions = q_list  # use list version
+    #     traj_point.velocities = [0.0] * self.num_joints
+    #     traj_point.time_from_start = rospy.Time(5.0)
 
-        traj.points = [traj_point]
-        traj_goal.trajectory = traj
+    #     traj.points = [traj_point]
+    #     traj_goal.trajectory = traj
 
-        self.arm_pos_cli.send_goal(traj_goal)
-        self.arm_pos_cli.wait_for_result()
+    #     self.arm_pos_cli.send_goal(traj_goal)
+    #     self.arm_pos_cli.wait_for_result()
 
     def xyz_to_jnt(self, x, y, z):
         # Define workspace limits
