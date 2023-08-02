@@ -38,20 +38,7 @@ class RobotArmMotion(object):
         self.arm_pos_cli.wait_for_server()
 
 
-    def clip_joint_limits(self, q):
-        # Define joint limits for each joint (in radians)
-        joint_limits = [
-            (2.35, 4.7),  # shoulder_pan_joint
-            (0, 0),  # shoulder_lift_joint
-            (-0.79, 0),  # elbow_joint    
-            (-2.09, 1.05),  # wrist_1_joint
-            (0.523, 2.618),  # wrist_2_joint
-            (-0, 0)   # wrist_3_joint
-            ]
 
-        # Clip the joint positions to the valid range
-        q_clip = [np.clip(q[i], joint_limits[i][0], joint_limits[i][1]) for i in range(self.num_joints)]
-        return q_clip
 
     def send_arm_traj(self, q):
         # Clip the joint positions to the valid range
