@@ -136,17 +136,17 @@ if __name__ == "__main__":
 
     # Defining the first way point
     way_point1 = kdl.JntArray(6)
-    for i, val in enumerate([2.2, -2.39, -0.44, -1.902, 1.69, 0.26]):  # also make sure this has the correct number of joints
+    for i, val in enumerate([2.25, -1.7995, -0.8, -1.99, 1.57, 0.1]):  # also make sure this has the correct number of joints
         way_point1[i] = val
 
     # Defining the second way point
     way_point2 = kdl.JntArray(6)
-    for i, val in enumerate([3.23, -2.39, -0.46, -1.79, 1.64, 0.26]):  # also make sure this has the correct number of joints
+    for i, val in enumerate([3.04, -2.29, -0.798, -0.91, 1.57, 5.82]):  # also make sure this has the correct number of joints
         way_point2[i] = val
 
     # Defining the third way point
     way_point3 = kdl.JntArray(6)
-    for i, val in enumerate([4.0, -2.41, -0.45, -1.75, 1.64, 0.26]):  # also make sure this has the correct number of joints
+    for i, val in enumerate([3.78, -2.614, -0.798, -1.27, 1.61, 5.82]):  # also make sure this has the correct number of joints
         way_point3[i] = val
 
     robot_arm_motion = RobotArmMotion()
