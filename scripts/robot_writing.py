@@ -172,6 +172,10 @@ class BottlePickPlace(object):
         q = self.ik_kdl(current_pose)
         self.send_arm_traj(q)
 
+    def draw(self):
+        current_pose = self.fk()
+        pick_pose = copy.deepcopy(current_pose)
+
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
