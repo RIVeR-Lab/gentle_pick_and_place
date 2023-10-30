@@ -66,14 +66,20 @@ class RobotArmMotion(object):
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # Define the arbitrary joint angles
-    arbitrary_joint_state = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
+    arbitrary_joint_state1 = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
+    arbitrary_joint_state2 = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
+    arbitrary_joint_state3 = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
+    arbitrary_joint_state4 = [1.2, -0.8, -1.0, -1.5, 1.5, 0.2]
     robot_arm_motion = RobotArmMotion()
 
     # Send the robot to home position
     robot_arm_motion.send_arm_traj(home_joint_state)
 
     # Send the robot to the arbitrary position
-    robot_arm_motion.send_arm_traj(arbitrary_joint_state)
+    robot_arm_motion.send_arm_traj(arbitrary_joint_state1)
+    robot_arm_motion.send_arm_traj(arbitrary_joint_state2)
+    robot_arm_motion.send_arm_traj(arbitrary_joint_state3)
+    robot_arm_motion.send_arm_traj(arbitrary_joint_state4)
 
     # Send the robot back to home position
     robot_arm_motion.send_arm_traj(home_joint_state)
