@@ -31,7 +31,8 @@ class BottlePickPlace(object):
 
         self.arm_joints = kdl.JntArrayVel(self.num_joints)
         self.joint_names = [
-            'shoulder_pan_joint',
+            'shoulder_pan_joint',ls
+            
             'shoulder_lift_joint',
             'elbow_joint',
             'wrist_1_joint',
