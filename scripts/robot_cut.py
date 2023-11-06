@@ -177,8 +177,9 @@ if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
-    pre_place_pose = [0.4, 0.0, 0.3]
     drop_marker = [0.15, 0.45, 0.3]
+    way_point1 = [3.17,-2.117,-1.76,0.67,1.488,5.508]
+    way_point2 = [3.17,-2.938,-1.38,1.124,1.488,5.508]
     demo = BottlePickPlace()
 
     demo.open_gripper()
@@ -197,6 +198,14 @@ if __name__ == "__main__":
         q_sol = demo.ik(grasp_pos, grasp_rot)
         demo.send_arm_traj(q_sol)
         demo.pick()
+
+        q_sol = demo.ik(way_point1, grasp_rot)
+        demo.send_arm_traj(q_sol)
+        demo.place()
+
+        q_sol = demo.ik(way_point2, grasp_rot)
+        demo.send_arm_traj(q_sol)
+        demo.place()
 
         q_sol = demo.ik(drop_marker, grasp_rot)
         demo.send_arm_traj(q_sol)
