@@ -199,13 +199,13 @@ if __name__ == "__main__":
         demo.send_arm_traj(q_sol)
         demo.pick()
 
-        demo.send_arm_traj(way_point1)
-        # q_sol = demo.ik(way_point1, grasp_rot)
-        # demo.send_arm_traj(q_sol)
+        # demo.send_arm_traj(way_point1)
+        # # q_sol = demo.ik(way_point1, grasp_rot)
+        # # demo.send_arm_traj(q_sol)
 
-        demo.send_arm_traj(way_point2)
-        # q_sol = demo.ik(way_point2, grasp_rot)
-        # demo.send_arm_traj(q_sol)
+        # demo.send_arm_traj(way_point2)
+        # # q_sol = demo.ik(way_point2, grasp_rot)
+        # # demo.send_arm_traj(q_sol)
 
         q_sol = demo.ik(drop_marker, grasp_rot)
         demo.send_arm_traj(q_sol)
