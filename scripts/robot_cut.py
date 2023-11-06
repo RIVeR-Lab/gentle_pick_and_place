@@ -200,11 +200,6 @@ if __name__ == "__main__":
 
         q_sol = demo.ik(drop_marker, grasp_rot)
         demo.send_arm_traj(q_sol)
-
-        # if max_segment_norm < 0.15:
-        #     place_pose = can_place_pose
-        # else:
-        #     place_pose = bottle_place_pose
-        # q_sol = demo.ik(place_pose, grasp_rot)
-        # demo.send_arm_traj(q_sol)
         demo.place()
+
+        demo.send_arm_traj(home_joint_state)
