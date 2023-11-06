@@ -178,8 +178,7 @@ if __name__ == "__main__":
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
     pre_place_pose = [0.4, 0.0, 0.3]
-    bottle_place_pose = [0.15, 0.45, 0.3]
-    can_place_pose = [0.15, -0.45, 0.3]
+    drop_marker = [0.15, 0.45, 0.3]
     demo = BottlePickPlace()
 
     demo.open_gripper()
@@ -199,7 +198,7 @@ if __name__ == "__main__":
         demo.send_arm_traj(q_sol)
         demo.pick()
 
-        q_sol = demo.ik(bottle_place_pose, grasp_rot)
+        q_sol = demo.ik(drop_marker, grasp_rot)
         demo.send_arm_traj(q_sol)
 
         # if max_segment_norm < 0.15:
