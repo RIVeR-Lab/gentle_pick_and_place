@@ -172,10 +172,6 @@ class BottlePickPlace(object):
         q = self.ik_kdl(current_pose)
         self.send_arm_traj(q)
 
-    def draw(self):
-        current_pose = self.fk()
-        pick_pose = copy.deepcopy(current_pose)
-
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
@@ -187,7 +183,7 @@ if __name__ == "__main__":
     demo = BottlePickPlace()
 
     demo.open_gripper()
-    for i in range(5):
+    for i in range():
         # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
         demo.send_arm_traj(home_joint_state)
 
@@ -206,10 +202,10 @@ if __name__ == "__main__":
         q_sol = demo.ik(pre_place_pose, grasp_rot)
         demo.send_arm_traj(q_sol)
 
-        if max_segment_norm < 0.15:
-            place_pose = can_place_pose
-        else:
-            place_pose = bottle_place_pose
-        q_sol = demo.ik(place_pose, grasp_rot)
-        demo.send_arm_traj(q_sol)
+        # if max_segment_norm < 0.15:
+        #     place_pose = can_place_pose
+        # else:
+        #     place_pose = bottle_place_pose
+        # q_sol = demo.ik(place_pose, grasp_rot)
+        # demo.send_arm_traj(q_sol)
         demo.place()
