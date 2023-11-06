@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 import scipy
 import rospy
@@ -30,7 +31,8 @@ class BottlePickPlace(object):
 
         self.arm_joints = kdl.JntArrayVel(self.num_joints)
         self.joint_names = [
-            'shoulder_pan_joint',
+            'shoulder_pan_joint',ls
+            
             'shoulder_lift_joint',
             'elbow_joint',
             'wrist_1_joint',
@@ -110,7 +112,7 @@ class BottlePickPlace(object):
         traj_point = JointTrajectoryPoint()
         traj_point.positions = q
         traj_point.velocities = [0.0] * self.num_joints
-        traj_point.time_from_start = rospy.Time(1.5)
+        traj_point.time_from_start = rospy.Time(2.5)
 
         traj.points = [traj_point]
         traj_goal.trajectory = traj
