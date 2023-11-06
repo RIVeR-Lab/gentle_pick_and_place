@@ -201,11 +201,9 @@ if __name__ == "__main__":
 
         q_sol = demo.ik(way_point1, grasp_rot)
         demo.send_arm_traj(q_sol)
-        demo.place()
 
         q_sol = demo.ik(way_point2, grasp_rot)
         demo.send_arm_traj(q_sol)
-        demo.place()
 
         q_sol = demo.ik(drop_marker, grasp_rot)
         demo.send_arm_traj(q_sol)
