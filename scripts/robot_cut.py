@@ -183,7 +183,7 @@ if __name__ == "__main__":
     demo = BottlePickPlace()
 
     demo.open_gripper()
-    for i in range():
+    for i in range(1):
         # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
         demo.send_arm_traj(home_joint_state)
 
