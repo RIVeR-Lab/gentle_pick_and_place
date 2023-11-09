@@ -67,7 +67,7 @@ if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # Define the arbitrary joint angles
     waypoint1 = [3.5, -2.199, -0.79, -1.566, 1.529, 0.3393]
-    waypoint2 = [3.46, 2.6249, -0.80, -1.2134, 1.5748, 0.1]
+    waypoint2 = [
     waypoint3 = [3.2775, 2.6249, -0.80, -1.2134, 1.5748, 0.1]
 
     robot_arm_motion = RobotArmMotion()
