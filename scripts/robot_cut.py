@@ -200,13 +200,13 @@ if __name__ == "__main__":
     #     demo.send_arm_traj(q_sol)
     #     demo.pick()
 
-        q_sol = demo.ik(pre_place_pose, grasp_rot)
-        demo.send_arm_traj(q_sol)
-
-        # if max_segment_norm < 0.15:
-        #     place_pose = can_place_pose
-        # else:
-        #     place_pose = bottle_place_pose
-        # q_sol = demo.ik(place_pose, grasp_rot)
+        # q_sol = demo.ik(pre_place_pose, grasp_rot)
         # demo.send_arm_traj(q_sol)
-        demo.place()
+
+        # # if max_segment_norm < 0.15:
+        # #     place_pose = can_place_pose
+        # # else:
+        # #     place_pose = bottle_place_pose
+        # # q_sol = demo.ik(place_pose, grasp_rot)
+        # # demo.send_arm_traj(q_sol)
+        # demo.place()
