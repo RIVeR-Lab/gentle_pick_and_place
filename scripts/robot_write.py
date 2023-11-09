@@ -66,14 +66,19 @@ class RobotArmMotion(object):
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # Define the arbitrary joint angles
-    arbitrary_joint_state = [3.17, -2.117, -1.7755, 0.67, 1.488, 5.508]
+    waypoint1 = [3.5, -2.199, -0.79, -1.566, 1.529, 0.3393]
+    waypoint2 = [3.46, 2.6249, -0.80, -1.2134, 1.5748, 0.1]
+    waypoint3 = [3.2775, 2.6249, -0.80, -1.2134, 1.5748, 0.1]
+
     robot_arm_motion = RobotArmMotion()
 
     # Send the robot to home position
     robot_arm_motion.send_arm_traj(home_joint_state)
 
     # Send the robot to the arbitrary position
-    robot_arm_motion.send_arm_traj(arbitrary_joint_state)
+    robot_arm_motion.send_arm_traj(waypoint1)
+    robot_arm_motion.send_arm_traj(waypoint2)
+    robot_arm_motion.send_arm_traj(waypoint3)
 
     # Send the robot back to home position
     robot_arm_motion.send_arm_traj(home_joint_state)
