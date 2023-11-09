@@ -181,31 +181,32 @@ if __name__ == "__main__":
     bottle_place_pose = [0.15, 0.45, 0.3]
     can_place_pose = [0.15, -0.45, 0.3]
     demo = BottlePickPlace()
+    demo.close_gripper()
 
-    demo.open_gripper()
-    for i in range(1):
-        # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
-        demo.send_arm_traj(home_joint_state)
+    # demo.open_gripper()
+    # for i in range(1):
+    #     # q_sol = demo.ik(home_pos, [np.pi, 0, 0])
+    #     demo.send_arm_traj(home_joint_state)
 
-        objects = demo.cluster_objects()
-        rand_object_idx = np.random.choice(len(objects))
-        object = objects[rand_object_idx]
-        max_segment_norm = linalg.norm(np.array([
-                object.pmax.x - object.pmin.x,
-                object.pmax.y - object.pmin.y]))
+    #     objects = demo.cluster_objects()
+    #     rand_object_idx = np.random.choice(len(objects))
+    #     object = objects[rand_object_idx]
+    #     max_segment_norm = linalg.norm(np.array([
+    #             object.pmax.x - object.pmin.x,
+    #             object.pmax.y - object.pmin.y]))
 
-        grasp_pos, grasp_rot = demo.select_grasp_pose(object)
-        q_sol = demo.ik(grasp_pos, grasp_rot)
-        demo.send_arm_traj(q_sol)
-        demo.pick()
+    #     grasp_pos, grasp_rot = demo.select_grasp_pose(object)
+    #     q_sol = demo.ik(grasp_pos, grasp_rot)
+    #     demo.send_arm_traj(q_sol)
+    #     demo.pick()
 
-        q_sol = demo.ik(pre_place_pose, grasp_rot)
-        demo.send_arm_traj(q_sol)
+    #     q_sol = demo.ik(pre_place_pose, grasp_rot)
+    #     demo.send_arm_traj(q_sol)
 
-        # if max_segment_norm < 0.15:
-        #     place_pose = can_place_pose
-        # else:
-        #     place_pose = bottle_place_pose
-        # q_sol = demo.ik(place_pose, grasp_rot)
-        # demo.send_arm_traj(q_sol)
-        demo.place()
+    #     # if max_segment_norm < 0.15:
+    #     #     place_pose = can_place_pose
+    #     # else:
+    #     #     place_pose = bottle_place_pose
+    #     # q_sol = demo.ik(place_pose, grasp_rot)
+    #     # demo.send_arm_traj(q_sol)
+    #     demo.place()
