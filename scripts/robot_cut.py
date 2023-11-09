@@ -177,9 +177,9 @@ if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
-    pre_place_pose = [0.4, 0.0, 0.3]
-    bottle_place_pose = [0.15, 0.45, 0.3]
-    can_place_pose = [0.15, -0.45, 0.3]
+    drop_marker = [0.15, 0.45, 0.3]
+    way_point1 = [3.17,-2.117,-1.76,0.67,1.488,5.508]
+    way_point2 = [3.17,-2.938,-1.38,1.124,1.488,5.508]
     demo = BottlePickPlace()
     demo.close_gripper()
 
@@ -200,13 +200,13 @@ if __name__ == "__main__":
     #     demo.send_arm_traj(q_sol)
     #     demo.pick()
 
-    #     q_sol = demo.ik(pre_place_pose, grasp_rot)
-    #     demo.send_arm_traj(q_sol)
+        q_sol = demo.ik(pre_place_pose, grasp_rot)
+        demo.send_arm_traj(q_sol)
 
-    #     # if max_segment_norm < 0.15:
-    #     #     place_pose = can_place_pose
-    #     # else:
-    #     #     place_pose = bottle_place_pose
-    #     # q_sol = demo.ik(place_pose, grasp_rot)
-    #     # demo.send_arm_traj(q_sol)
-    #     demo.place()
+        # if max_segment_norm < 0.15:
+        #     place_pose = can_place_pose
+        # else:
+        #     place_pose = bottle_place_pose
+        # q_sol = demo.ik(place_pose, grasp_rot)
+        # demo.send_arm_traj(q_sol)
+        demo.place()
