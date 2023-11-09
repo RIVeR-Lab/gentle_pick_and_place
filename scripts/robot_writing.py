@@ -191,6 +191,7 @@ if __name__ == "__main__":
     demo = BottlePickPlace()
     angle = demo.ik(P0_pose,P0_rot)
     demo.close_gripper()
+    demo.send_arm_traj(home_joint_state)
     demo.send_arm_traj(angle)
     # demo.send_arm_traj(P1)
     # demo.send_arm_traj(P2)
