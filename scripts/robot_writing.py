@@ -187,7 +187,7 @@ if __name__ == "__main__":
     # P3 = [0.75, 0.0, 0.45, 1.279,2.883,-0.084]
     demo = BottlePickPlace()
     demo.close_gripper()
-    # demo.send_arm_traj(P0)
+    demo.send_arm_traj(P0)
     # demo.send_arm_traj(P1)
     # demo.send_arm_traj(P2)
     # demo.send_arm_traj(P3)
