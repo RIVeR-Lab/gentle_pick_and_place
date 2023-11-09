@@ -181,16 +181,16 @@ if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
-    P0 = [0.75, 0.0, 0.45]
-    P1 = [0.75, 0.0, 0.10]
-    P2 = [0.75, 0.10, 0.10]
-    P3 = [0.75, 0.0, 0.45]
+    P0 = [0.75, 0.0, 0.45, 1.279,2.883,-0.084]
+    # P1 = [0.75, 0.0, 0.10, 1.279,2.883,-0.084]
+    # P2 = [0.75, 0.10, 0.10, 1.279,2.883,-0.084]
+    # P3 = [0.75, 0.0, 0.45, 1.279,2.883,-0.084]
     demo = BottlePickPlace()
     demo.close_gripper()
-    demo.send_arm_traj(P0)
-    demo.send_arm_traj(P1)
-    demo.send_arm_traj(P2)
-    demo.send_arm_traj(P3)
+    # demo.send_arm_traj(P0)
+    # demo.send_arm_traj(P1)
+    # demo.send_arm_traj(P2)
+    # demo.send_arm_traj(P3)
     demo.send_arm_traj(home_joint_state)
 
     # demo.open_gripper()
