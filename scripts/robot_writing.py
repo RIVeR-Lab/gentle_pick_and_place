@@ -189,7 +189,7 @@ if __name__ == "__main__":
     # P2 = [0.75, 0.10, 0.10, 1.279,2.883,-0.084]
     # P3 = [0.75, 0.0, 0.45, 1.279,2.883,-0.084]
     demo = BottlePickPlace()
-    angle = demo.ik_kdl(P0_pose)
+    angle = demo.pos_ik_solver(P0_pose)
     demo.close_gripper()
     demo.send_arm_traj(home_joint_state)
     demo.send_arm_traj(angle)
