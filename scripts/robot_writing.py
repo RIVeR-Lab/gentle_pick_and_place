@@ -198,7 +198,7 @@ if __name__ == "__main__":
     # demo.send_arm_traj(P1)
     # demo.send_arm_traj(P2)
     # demo.send_arm_traj(P3)
-    demo.send_arm_traj(home_joint_state)
+    # demo.send_arm_traj(home_joint_state)
 
     # demo.open_gripper()
     # for i in range(5):
