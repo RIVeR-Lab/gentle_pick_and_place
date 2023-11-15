@@ -184,6 +184,7 @@ if __name__ == "__main__":
     waypoint3 = [3.228, -2.604, -0.80, -1.327, 1.601, 5.578]
     waypoint4 = [3.188, -2.4275, -1.131, -1.236, 1.6537, 5.6407]
     waypoint5 = [3.376, -2.4272, -1.130, -1.2376, 1.68057, 5.6409]
+    waypoint6 = [3.4, -2.599, -0.80, -1.3497, 1.595, 5.82]
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
     # P0_pose = [0.75, 0.0, 0.75] 
@@ -202,6 +203,7 @@ if __name__ == "__main__":
     demo.send_arm_traj(waypoint3)
     demo.send_arm_traj(waypoint4)
     demo.send_arm_traj(waypoint5)
+    demo.send_arm_traj(waypoint6)
     # demo.send_arm_traj(angle)
     # demo.send_arm_traj(P1)
     # demo.send_arm_traj(P2)
