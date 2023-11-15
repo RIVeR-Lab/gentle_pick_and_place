@@ -179,20 +179,22 @@ class BottlePickPlace(object):
 
 if __name__ == "__main__":
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
+    waypoint1 = [3.4, -1.972, -0.80, -1.88, 1.53, 5.82]
     # home_pos = [0.0, 0.4, 0.3]
     # # home_rot = [np.pi, 0, 0]
-    P0_pose = [0.75, 0.0, 0.75] 
-    P0_rot = [0.297, -3.144, 0.172]
+    # P0_pose = [0.75, 0.0, 0.75] 
+    # P0_rot = [0.297, -3.144, 0.172]
 
    
     # P1 = [0.75, 0.0, 0.10, 1.279,2.883,-0.084]
     # P2 = [0.75, 0.10, 0.10, 1.279,2.883,-0.084]
     # P3 = [0.75, 0.0, 0.45, 1.279,2.883,-0.084]
     demo = BottlePickPlace()
-    angle = demo.pos_ik_solver(P0_pose)
-    demo.close_gripper()
+    # angle = demo.pos_ik_solver(P0_pose)
+    # demo.close_gripper()
     demo.send_arm_traj(home_joint_state)
-    demo.send_arm_traj(angle)
+    demo.send_arm_traj(waypoint1)
+    # demo.send_arm_traj(angle)
     # demo.send_arm_traj(P1)
     # demo.send_arm_traj(P2)
     # demo.send_arm_traj(P3)
