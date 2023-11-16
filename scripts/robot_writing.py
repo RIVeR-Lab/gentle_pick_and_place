@@ -108,7 +108,7 @@ class BottlePickPlace(object):
         traj_point = JointTrajectoryPoint()
         traj_point.positions = q
         traj_point.velocities = [0.0] * self.num_joints
-        traj_point.time_from_start = rospy.Time(7.0)
+        traj_point.time_from_start = rospy.Time(3.5)
 
         traj.points = [traj_point]
         traj_goal.trajectory = traj
