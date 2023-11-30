@@ -177,60 +177,60 @@ class BottlePickPlace(object):
         pick_pose = copy.deepcopy(current_pose)
 
 
-# if __name__ == "__main__":
-#     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
-#     waypoint1 = [3.4, -1.972, -0.80, -1.88, 1.53, 5.82]
-#     waypoint2 = [3.4, -2.599, -0.80, -1.3497, 1.595, 5.82]
-#     waypoint3 = [3.228, -2.604, -0.80, -1.327, 1.601, 5.578]
-#     waypoint4 = [3.188, -2.4275, -1.131, -1.236, 1.6537, 5.6407]
-#     waypoint5 = [3.376, -2.4272, -1.130, -1.2376, 1.68057, 5.6409]
-#     waypoint6 = [3.4, -2.599, -0.80, -1.3497, 1.595, 5.82]
-#     demo = BottlePickPlace()
-#     # angle = demo.pos_ik_solver(P0_pose)
-#     # demo.close_gripper()
-#     demo.send_arm_traj(home_joint_state)
-#     demo.send_arm_traj(waypoint1)
-#     demo.send_arm_traj(waypoint2)
-#     demo.send_arm_traj(waypoint3)
-#     demo.send_arm_traj(waypoint4)
-#     demo.send_arm_traj(waypoint5)
-#     demo.send_arm_traj(waypoint6)
-#     demo.send_arm_traj(home_joint_state)
-
 if __name__ == "__main__":
-    demo = BottlePickPlace()
-
     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
+    waypoint1 = [3.4, -1.972, -0.80, -1.88, 1.53, 5.82]
+    waypoint2 = [3.4, -2.599, -0.80, -1.3497, 1.595, 5.82]
+    waypoint3 = [3.228, -2.604, -0.80, -1.327, 1.601, 5.578]
+    waypoint4 = [3.188, -2.4275, -1.131, -1.236, 1.6537, 5.6407]
+    waypoint5 = [3.376, -2.4272, -1.130, -1.2376, 1.68057, 5.6409]
+    waypoint6 = [3.4, -2.599, -0.80, -1.3497, 1.595, 5.82]
+    demo = BottlePickPlace()
+    # angle = demo.pos_ik_solver(P0_pose)
+    # demo.close_gripper()
+    demo.send_arm_traj(home_joint_state)
+    demo.send_arm_traj(waypoint1)
+    demo.send_arm_traj(waypoint2)
+    demo.send_arm_traj(waypoint3)
+    demo.send_arm_traj(waypoint4)
+    demo.send_arm_traj(waypoint5)
+    demo.send_arm_traj(waypoint6)
+    demo.send_arm_traj(home_joint_state)
+
+# if __name__ == "__main__":
+#     demo = BottlePickPlace()
+
+#     home_joint_state = [5.0, -1.80, -0.80, -2.0, 1.57, 0.1]
     
-    # Define waypoints in Cartesian coordinates (x, y, z)
-    waypoint1_xyz = [0.5, -0.3, 0.5]
-    waypoint2_xyz = [0.6, -0.2, 0.4]
-    waypoint3_xyz = [0.7, -0.1, 0.6]
-    waypoint4_xyz = [0.5, -0.3, 0.5]
+#     # Define waypoints in Cartesian coordinates (x, y, z)
+#     waypoint1_xyz = [0.5, -0.3, 0.5]
+#     waypoint2_xyz = [0.6, -0.2, 0.4]
+#     waypoint3_xyz = [0.7, -0.1, 0.6]
+#     waypoint4_xyz = [0.5, -0.3, 0.5]
 
-    # Convert Cartesian coordinates to joint angles using IK
-    waypoint1_joint_angles = demo.ik(waypoint1_xyz, [0, 0, 0])
-    waypoint2_joint_angles = demo.ik(waypoint2_xyz, [0, 0, 0])
-    waypoint3_joint_angles = demo.ik(waypoint3_xyz, [0, 0, 0])
-    waypoint4_joint_angles = demo.ik(waypoint4_xyz, [0, 0, 0])
+#     # Convert Cartesian coordinates to joint angles using IK
+#     waypoint1_joint_angles = demo.ik(waypoint1_xyz, [0, 0, 0])
+#     waypoint2_joint_angles = demo.ik(waypoint2_xyz, [0, 0, 0])
+#     waypoint3_joint_angles = demo.ik(waypoint3_xyz, [0, 0, 0])
+#     waypoint4_joint_angles = demo.ik(waypoint4_xyz, [0, 0, 0])
 
-    # Move to home position
-    demo.send_arm_traj(home_joint_state)
+#     # Move to home position
+#     demo.send_arm_traj(home_joint_state)
 
-    # Move to waypoint 1
-    demo.send_arm_traj(waypoint1_joint_angles)
+#     # Move to waypoint 1
+#     demo.send_arm_traj(waypoint1_joint_angles)
 
-    # Move to waypoint 2
-    demo.send_arm_traj(waypoint2_joint_angles)
+#     # Move to waypoint 2
+#     demo.send_arm_traj(waypoint2_joint_angles)
 
-    # Move to waypoint 3
-    demo.send_arm_traj(waypoint3_joint_angles)
+#     # Move to waypoint 3
+#     demo.send_arm_traj(waypoint3_joint_angles)
 
-    # Move to waypoint 4
-    demo.send_arm_traj(waypoint4_joint_angles)
+#     # Move to waypoint 4
+#     demo.send_arm_traj(waypoint4_joint_angles)
 
-    # Return to home position
-    demo.send_arm_traj(home_joint_state)
+#     # Return to home position
+#     demo.send_arm_traj(home_joint_state)
 
 
     # demo.open_gripper()
