@@ -129,7 +129,7 @@ class BottlePickPlace(object):
         grasp_pos = [
             object.pose.position.x,
             object.pose.position.y,
-            object.pose.position.z + 0.2
+            object.pose.position.z + 0.4
         ]
 
         grasp_rot_y = np.array([
